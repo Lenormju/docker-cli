@@ -815,6 +815,15 @@ guide](https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practi
 
 The cache for `RUN` instructions can be invalidated by [`ADD`](#add) and [`COPY`](#copy) instructions.
 
+### Docker BuildKit support for Secrets
+
+By [building the image with BuildKit](https://docs.docker.com/develop/develop-images/build_enhancements/), you can provide secrets to the command being run. Here is an example :  
+```dockerfile
+RUN --mount=type=secret,id=YOUR_SECRETS_NAME,required=false   do_something_with_secrets_file /run/secrets/YOUR_SECRETS_NAME
+```
+You supply the file from the command line using : `--secret id=YOUR_SECRETS_NAME,src=PATH/TO/YOUR/SECRETS/FILE.txt`.  
+When `required=false`, if you don't supply the file through the command line, there will be no corresponding `/run/secrets/YOUR_SECRETS_NAME` file. But if `required=true`, then you will get a Docker error `secret YOUR_SECRETS_NAME not found`.
+
 ### Known issues (RUN)
 
 - [Issue 783](https://github.com/docker/docker/issues/783) is about file
